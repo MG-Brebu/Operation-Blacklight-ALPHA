@@ -2,6 +2,6 @@
 
 ## Interactive Multimedia \ Semester Project
 
-by Mario G. Brebu | B00144991
+Mario G. Brebu | B00144991
 // James Cleary | B00145613
  
