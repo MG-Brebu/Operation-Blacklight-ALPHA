@@ -19,7 +19,7 @@ public class EnemyController : MonoBehaviour
     // C - Enemy Health Variables
     public int enemyHealth;
     private int enemyCurrentHealth;
-    public Renderer enemyRenderer;
+    private Renderer enemyRenderer;
     private float damageAlertTime = 0.1f;
     private float damageAlertCounter;
     private Color enemyColor;

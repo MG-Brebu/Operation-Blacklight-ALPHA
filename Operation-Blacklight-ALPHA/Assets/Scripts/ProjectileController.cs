@@ -44,6 +44,7 @@ public class ProjectileController : MonoBehaviour
         {
             collide.gameObject.GetComponent<PlayerController>().DamagePlayer(projectileDamage);
             Destroy(gameObject);
+            Debug.Log("Player Collide");
         }
 
         // If collision with breakable prop, damage breakable prop and destroy projectile

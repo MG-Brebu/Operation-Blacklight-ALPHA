@@ -7,8 +7,11 @@ public class PlayerController : MonoBehaviour
     // A - Player Interaction Variables
     public float playerSpeed;
     private Rigidbody playerRB;
+    private Vector3 currentPlayerMove;
     private Vector3 playerMove;
-    private Vector3 playerMoveVelocity;
+    private Vector3 smoothInputVelocity;
+    public float smoothInputSpeed = .2f;
+    public Vector3 playerMoveVelocity;
     private Camera playerCamera;
 
     // B - Player Weapon Variables
@@ -16,11 +19,10 @@ public class PlayerController : MonoBehaviour
 
     // C - Player Health Variables
     public int playerHealth;
-    private int playerCurrentHealth;
-    public Renderer playerRenderer;
-    private float damageAlertTime = 0.1f;
-    private float damageAlertCounter;
-    private Color playerColor;
+    public int playerCurrentHealth;
+
+    // D - Player Animation Variables
+    public Animator animator;
 
     // To Handle Initialization
     void Start()
@@ -31,8 +33,6 @@ public class PlayerController : MonoBehaviour
 
         // C - Initiailize Health Variables
         playerCurrentHealth = playerHealth;
-        playerRenderer = GetComponent<Renderer>();
-        playerColor = playerRenderer.material.GetColor("_Color");
     }
 
     // To Handle non-Frame-Sensitive Operations
@@ -40,7 +40,8 @@ public class PlayerController : MonoBehaviour
     {
         // A - WASD Movement Initialization
         playerMove = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        playerMoveVelocity = playerMove * playerSpeed;
+        currentPlayerMove = Vector3.SmoothDamp(currentPlayerMove, playerMove, ref smoothInputVelocity, smoothInputSpeed);
+        playerMoveVelocity = currentPlayerMove * playerSpeed;
 
         // A - Mouse Look Rotation Implementation
         Ray playerCameraRay = playerCamera.ScreenPointToRay(Input.mousePosition);
@@ -52,7 +53,8 @@ public class PlayerController : MonoBehaviour
             Vector3 playerLookPoint = playerCameraRay.GetPoint(rayLength);
             Debug.DrawLine(playerCameraRay.origin, playerLookPoint, Color.red);
 
-            transform.LookAt(new Vector3(playerLookPoint.x, transform.position.y, playerLookPoint.z));
+            Vector3 lookAt = new Vector3(playerLookPoint.x, transform.position.y, playerLookPoint.z);
+            transform.LookAt(lookAt);
         }
 
         // B - Weapon Fire Control
@@ -75,15 +77,12 @@ public class PlayerController : MonoBehaviour
             Time.timeScale = 0;
         }
 
-        // B - Reset Player Color when Alert Counter Reaches 0
-        if (damageAlertCounter > 0 )
-        {
-            damageAlertCounter -= Time.deltaTime;
-            if (damageAlertCounter <= 0)
-            {
-                playerRenderer.material.SetColor("_Color", playerColor);
-            }
-        }
+        // C - Implement Animations
+        animator.SetBool("Forward", Input.GetKey(KeyCode.W));
+        animator.SetBool("Backward", Input.GetKey(KeyCode.S));
+        animator.SetBool("Left", Input.GetKey(KeyCode.A));
+        animator.SetBool("Right", Input.GetKey(KeyCode.D));
+        animator.SetBool("Shoot", Input.GetMouseButton(0));
     }
 
     // To Handle Frame-Sensitive Operations
@@ -97,7 +96,5 @@ public class PlayerController : MonoBehaviour
     public void DamagePlayer(int damage)
     {
         playerCurrentHealth -= damage;
-        damageAlertCounter = damageAlertTime;
-        playerRenderer.material.SetColor("_Color", Color.white);
     }
 }

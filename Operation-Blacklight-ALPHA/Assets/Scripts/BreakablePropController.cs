@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class BreakablePropController : MonoBehaviour
 {
-    // A - Prop Health Variables
+    // A - Prop Interaction Variables
+    private Rigidbody propRB;
+
+    // B - Prop Health Variables
     public int propHealth;
     private int propCurrentHealth;
-    public Renderer propRenderer;
+    private Renderer propRenderer;
     private float damageAlertTime = 0.1f;
     private float damageAlertCounter;
     private Color propColor;
@@ -15,7 +18,10 @@ public class BreakablePropController : MonoBehaviour
     // To Handle Initialization
     void Start()
     {
-        // A - Initiailize Health Variables
+        // A - Initialize Interaction Variables
+        propRB = GetComponent<Rigidbody>();
+
+        // B - Initiailize Health Variables
         propCurrentHealth = propHealth;
         propRenderer = GetComponent<Renderer>();
         propColor = propRenderer.material.GetColor("_Color");
@@ -24,13 +30,13 @@ public class BreakablePropController : MonoBehaviour
     // To Handle non-Frame-Sensitive Operations
     void Update()
     {
-        // A - Destroy Prop if Health <= 0
+        // B - Destroy Prop if Health <= 0
         if (propCurrentHealth <= 0)
         {
             Destroy(gameObject);
         }
 
-        // A - Reset Player Color when Alert Counter Reaches 0
+        // B - Reset Player Color when Alert Counter Reaches 0
         if (damageAlertCounter > 0)
         {
             damageAlertCounter -= Time.deltaTime;
@@ -41,7 +47,7 @@ public class BreakablePropController : MonoBehaviour
         }
     }
 
-    // A - To Handle Damage to Health Pool & Damage Alert
+    // B - To Handle Damage to Health Pool & Damage Alert
     public void DamageProp(int damage)
     {
         propCurrentHealth -= damage;
