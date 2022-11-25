@@ -1,0 +1,16 @@
+# Unity Packages Used:
+- ProBuilder
+	* Used as is
+- Cinemachine
+	* Used as is
+
+
+# Third Party Assets Used:
+- "Adventurer Blake" by jmartinezcarrasco00
+	* Changed Asset name to "Player" for Player model
+	* Changed Asset name to "Enemy" for Enemy model
+	* Changed Asset material to custom material for Enemy model
+	* Implemented animations included in Asset
+
+
+
