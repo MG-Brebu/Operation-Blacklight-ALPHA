@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitchController : MonoBehaviour
 {
-    public void playGame()
+    public void nextLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }

@@ -7,7 +7,9 @@ public class EnemyController : MonoBehaviour
     // A - Enemy Interaction Variables
     private Rigidbody enemyRB;
     public float enemySpeed;
-    public PlayerController player;
+    private PlayerController player;
+    private bool gameOver;
+    private bool gameWin;
 
     // B - Enemy Fire Variables
     public ProjectileController projectile;
@@ -19,6 +21,7 @@ public class EnemyController : MonoBehaviour
     // C - Enemy Health Variables
     public int enemyHealth;
     private int enemyCurrentHealth;
+    public GameObject enemyBody;
     private Renderer enemyRenderer;
     private float damageAlertTime = 0.1f;
     private float damageAlertCounter;
@@ -33,38 +36,45 @@ public class EnemyController : MonoBehaviour
 
         // C - Initiailize Health Variables
         enemyCurrentHealth = enemyHealth;
-        enemyRenderer = GetComponent<Renderer>();
+        enemyRenderer = enemyBody.GetComponent<Renderer>();
         enemyColor = enemyRenderer.material.GetColor("_Color");
     }
 
     // To Handle non-Frame-Sensitive Operations
     void Update()
     {
-        // A - Look at Player
-        transform.LookAt(player.transform);
+        // Update() only runs if game is not over and player has not won
+        gameOver = player.GetComponent<PlayerController>().gameOver;
+        gameWin = player.GetComponent<PlayerController>().gameWin;
 
-        // B - Fire Projectile at Player
-        fireCounter -= Time.deltaTime;
-        if (fireCounter <= 0)
+        if (gameOver == false && gameWin == false)
         {
-            fireCounter = rateOfFire;
-            ProjectileController newProjectile = Instantiate(projectile, firePoint.position, firePoint.rotation);
-            newProjectile.projectileSpeed = projectileSpeed;
-        }
+            // A - Look at Player
+            transform.LookAt(player.transform);
 
-        // C - Destroy Enemy if Health <= 0
-        if (enemyCurrentHealth <= 0)
-        {
-            Destroy(gameObject);
-        }
-
-        // C - Reset Enemy Color when Alert Counter Reaches 0
-        if (damageAlertCounter > 0)
-        {
-            damageAlertCounter -= Time.deltaTime;
-            if (damageAlertCounter <= 0)
+            // B - Fire Projectile at Player
+            fireCounter -= Time.deltaTime;
+            if (fireCounter <= 0)
             {
-                enemyRenderer.material.SetColor("_Color", enemyColor);
+                fireCounter = rateOfFire;
+                ProjectileController newProjectile = Instantiate(projectile, firePoint.position, firePoint.rotation);
+                newProjectile.projectileSpeed = projectileSpeed;
+            }
+
+            // C - Destroy Enemy if Health <= 0
+            if (enemyCurrentHealth <= 0)
+            {
+                Destroy(gameObject);
+            }
+
+            // C - Reset Enemy Color when Alert Counter Reaches 0
+            if (damageAlertCounter > 0)
+            {
+                damageAlertCounter -= Time.deltaTime;
+                if (damageAlertCounter <= 0)
+                {
+                    enemyRenderer.material.SetColor("_Color", enemyColor);
+                }
             }
         }
     }

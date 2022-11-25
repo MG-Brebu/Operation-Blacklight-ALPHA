@@ -47,11 +47,14 @@ public class BreakablePropController : MonoBehaviour
         }
     }
 
-    // B - To Handle Damage to Health Pool & Damage Alert
-    public void DamageProp(int damage)
+    private void OnTriggerEnter(Collider collision)
     {
-        propCurrentHealth -= damage;
-        damageAlertCounter = damageAlertTime;
-        propRenderer.material.SetColor("_Color", Color.white);
+        if (collision.gameObject.tag == "Projectile")
+        {
+            propCurrentHealth -= 1;
+            damageAlertCounter = damageAlertTime;
+            propRenderer.material.SetColor("_Color", Color.white);
+            Destroy(collision.gameObject);
+        }
     }
 }
